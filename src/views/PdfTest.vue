@@ -3,14 +3,33 @@
     <button @click="generatePdf">
       生成
     </button>
+    <div style="visibility: visible">
+
+      <div style="width: 1500px; height: 1000px;">
+        <pie-chart ref="pieChart"/>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import PieChart from "@/components/PieChart";
+import {ref} from "vue";
+
 const pdfFonts = require("@/assets/vfs_fonts");
 const pdfMake = require('pdfmake/build/pdfmake.js');
 export default {
   name: "PdfTest",
+  components: {
+    PieChart,
+  },
+  setup: () => {
+    const pieChart = ref();
+
+    return {
+      pieChart
+    }
+  },
   methods: {
     generatePdf() {
       pdfMake.vfs = pdfFonts.pdfMake.vfs;
@@ -50,7 +69,14 @@ export default {
                   'short', 'short', 'long long long long long long long long ']
               ]
             }
-          }
+          },
+
+          {
+            image: this.$refs.pieChart.getDataURL(),
+            width: 750,
+            pageOrientation: 'landscape',
+            pageBreak: 'before'
+          },
         ],
         styles: {
           header: {
